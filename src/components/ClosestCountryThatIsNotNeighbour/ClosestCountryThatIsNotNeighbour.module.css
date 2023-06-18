@@ -11,7 +11,7 @@
 .inputDiv {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 36px;
 }
 
 .inputDiv label {

@@ -1,0 +1,23 @@
+.header {
+
+    width: 100%;
+    display: flex;
+    background-color: whitesmoke;
+    padding: 12px;
+    justify-content: center;
+  }
+  
+  .header nav ul {
+    display: flex;
+    list-style-type: none;
+    gap: 32px;
+  }
+  
+  .header nav ul li button {
+    background-color: white;
+    color: black;
+    padding: 6px;
+    border: 1px solid var(--grey-main);
+    cursor: pointer;
+    border-radius: 6px;
+  }

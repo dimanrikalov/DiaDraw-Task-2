@@ -1,6 +1,7 @@
 import './App.css';
 import { DistanceCalculator } from './components/DistanceCalculator/DistanceCalculator';
 import { CountriesWithinTimezones } from './components/CountriesWithinTimezones/CountriesWithinTimezones';
+import { SearchCountriesByCharacters } from './components/SearchCountriesByCharacters/SearchCountriesByCharacters';
 import { ClosestCountryThatIsNotNeighbour } from './components/ClosestCountryThatIsNotNeighbour/ClosestCountryThatIsNotNeighbour';
 
 function App() {
@@ -8,7 +9,8 @@ function App() {
 		<div className="App">
 			{/* <DistanceCalculator /> */}
 			{/* <ClosestCountryThatIsNotNeighbour /> */}
-			<CountriesWithinTimezones />
+			{/* <CountriesWithinTimezones /> */}
+			<SearchCountriesByCharacters />
 		</div>
 	);
 }

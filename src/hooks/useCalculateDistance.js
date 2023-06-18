@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useFetchData } from './useFetchData';
 
 const toRadians = (degrees) => {
@@ -9,6 +9,7 @@ export const useCalculateDistance = (initData) => {
 	const { data } = useFetchData(null);
 	const [result, setResult] = useState(initData);
 	const [error, setError] = useState(null);
+
 
 	const findDistance = useCallback(
 		(countryOne, countryTwo) => {
@@ -43,8 +44,8 @@ export const useCalculateDistance = (initData) => {
 					Math.sin(dLng / 2) ** 2;
 			const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 			const distance = earthRadius * c;
-
 			setResult(distance.toFixed(2));
+			return distance.toFixed(2);
 		},
 		[data]
 	);

@@ -1,56 +1,27 @@
-import { useReducer, useState } from 'react';
+import { useState } from 'react';
 import styles from './ClosestCountryThatIsNotNeighbour.module.css';
 import { useFetchData } from '../../hooks/useFetchData';
-
-const toRadians = (degrees) => {
-	return degrees * (Math.PI / 180);
-};
+import { useCalculateDistance } from '../../hooks/useCalculateDistance';
 
 export const ClosestCountryThatIsNotNeighbour = () => {
 	const { data } = useFetchData(null);
-	const [result, setResult] = useState({});
-	const [error, setError] = useState(null);
+	const [response, setResponse] = useState(null);
+	const [errorResponse, setErrorResponse] = useState(null);
 	const [inputValue, setInputValue] = useState('');
-
-	const findDistance = (countryOne, countryTwo) => {
-		const earthRadius = 6371;
-		const countryOneObj = data.find((x) => x.cca3 === countryOne);
-		const countryTwoObj = data.find((x) => x.cca3 === countryTwo);
-
-		if (!countryOneObj) {
-			setError('Invalid 3-digit code for country one!');
-			return;
-		}
-		if (!countryTwoObj) {
-			setError('Invalid 3-digit code for country two!');
-			return;
-		}
-		setError(null);
-
-		const lat1 = countryOneObj.latlng[0];
-		const lng1 = countryOneObj.latlng[1];
-		const lat2 = countryTwoObj.latlng[0];
-		const lng2 = countryTwoObj.latlng[1];
-
-		const dLat = toRadians(lat2 - lat1);
-		const dLng = toRadians(lng2 - lng1);
-
-		const a =
-			Math.sin(dLat / 2) ** 2 +
-			Math.cos(toRadians(lat1)) *
-				Math.cos(toRadians(lat2)) *
-				Math.sin(dLng / 2) ** 2;
-		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-		const distance = earthRadius * c;
-
-		return distance.toFixed(2);
-	};
+	const { result, setResult, findDistance, error } = useCalculateDistance(-1); //failed hook
 
 	const handleChange = (e) => {
 		setInputValue(e.target.value);
 	};
 
 	const handleSubmit = () => {
+		setErrorResponse(null);
+
+		if (!inputValue) {
+			setErrorResponse('Enter valid country name!');
+			return;
+		}
+
 		const country = data.find((x) => {
 			if (
 				Array.from(Object.values(x.name)).some(
@@ -66,6 +37,11 @@ export const ClosestCountryThatIsNotNeighbour = () => {
 			}
 		});
 
+		if (!country) {
+			setErrorResponse('Enter valid country name!');
+			return;
+		}
+
 		const neighbours = country.borders; // [AUT, FRA, SMR, SVN, CHE, VAT]
 
 		const neighboursOfNeighbours = [];
@@ -75,22 +51,27 @@ export const ClosestCountryThatIsNotNeighbour = () => {
 		});
 
 		const realRes = Array.from(new Set(neighboursOfNeighbours));
+
 		const finalRes = realRes.filter(
 			(x) => !neighbours.includes(x) && x !== country.cca3
 		);
 
 		//no neighbours of neighbours case
 		if (!finalRes.length) {
-			setResult({ answer: 'None', distance: 0 });
+			setResponse({ answer: 'None', distance: 0 });
 			return;
 		}
 
 		const distancesArray = finalRes
-			.map((x) => [x, findDistance(country.cca3, x)])
+			.map((x) => {
+				const res = findDistance(country.cca3, x);//problem is here
+				return [x, res];
+			})
 			.sort((a, b) => a[1] - b[1]);
+
 		const answer = data.find((x) => x.cca3 === distancesArray[0][0]).name
 			.common;
-		setResult({ answer, distance: distancesArray[0][1] });
+		setResponse({ answer, distance: distancesArray[0][1] });
 	};
 
 	return (
@@ -109,15 +90,17 @@ export const ClosestCountryThatIsNotNeighbour = () => {
 				</button>
 			</div>
 
-			{error && (
+			{errorResponse && (
 				<div className={styles.errorDiv}>
-					<h4>{error}</h4>
+					<h4>{errorResponse}</h4>
 				</div>
 			)}
-			<h3>
-				Closest not neighbouring country is: {result.answer} with
-				distance: {result.distance} kms.
-			</h3>
+			{response && (
+				<h3>
+					Closest not neighbouring country is: {response.answer} with
+					distance: {response.distance} kms.
+				</h3>
+			)}
 		</div>
 	);
 };

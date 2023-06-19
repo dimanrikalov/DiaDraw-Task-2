@@ -121,6 +121,7 @@ export const CountriesWithinTimezones = () => {
 			x.timezones.some((timezone) => searchedRange.includes(timezone))
 		);
 
+		//this way the case where UK for example (a country with no neighbours) is the first country that is extracted will not block the logic from reaching other countries that fit the criteria (hopefully)
 		startingCountries.forEach((startingCountry) => {
 			findNeighboringCountries(startingCountry);
 		});

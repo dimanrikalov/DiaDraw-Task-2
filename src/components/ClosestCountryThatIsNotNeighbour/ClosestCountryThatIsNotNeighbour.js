@@ -42,7 +42,7 @@ export const ClosestCountryThatIsNotNeighbour = () => {
 			return;
 		}
 
-		const neighbours = country.borders; // [AUT, FRA, SMR, SVN, CHE, VAT]
+		const neighbours = country.borders; // [AUT, FRA, SMR, SVN, CHE, VAT] if input is ITALY
 
 		const neighboursOfNeighbours = [];
 		neighbours.forEach((x) => {
@@ -50,19 +50,19 @@ export const ClosestCountryThatIsNotNeighbour = () => {
 			neighboursOfNeighbours.push(...curr.borders.filter((y) => y !== x));
 		});
 
-		const realRes = Array.from(new Set(neighboursOfNeighbours));
+		const realMatches = Array.from(new Set(neighboursOfNeighbours));
 
-		const finalRes = realRes.filter(
+		const finalMatches = realMatches.filter(
 			(x) => !neighbours.includes(x) && x !== country.cca3
 		);
 
 		//no neighbours of neighbours case
-		if (!finalRes.length) {
+		if (!finalMatches.length) {
 			setResponse({ answer: 'None', distance: 0 });
 			return;
 		}
 
-		const distancesArray = finalRes
+		const distancesArray = finalMatches
 			.map((x) => {
 				const res = findDistance(country.cca3, x);//problem is here
 				return [x, res];

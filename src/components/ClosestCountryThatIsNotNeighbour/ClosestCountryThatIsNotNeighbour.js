@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import styles from './ClosestCountryThatIsNotNeighbour.module.css';
 import { useFetchData } from '../../hooks/useFetchData';
+import styles from './ClosestCountryThatIsNotNeighbour.module.css';
 import { useCalculateDistance } from '../../hooks/useCalculateDistance';
 
 export const ClosestCountryThatIsNotNeighbour = () => {
@@ -8,7 +8,7 @@ export const ClosestCountryThatIsNotNeighbour = () => {
 	const [response, setResponse] = useState(null);
 	const [errorResponse, setErrorResponse] = useState(null);
 	const [inputValue, setInputValue] = useState('');
-	const { result, setResult, findDistance, error } = useCalculateDistance(-1); //failed hook
+	const { findDistance } = useCalculateDistance(-1);
 
 	const handleChange = (e) => {
 		setInputValue(e.target.value);
@@ -24,7 +24,7 @@ export const ClosestCountryThatIsNotNeighbour = () => {
 
 		const country = data.find((x) => {
 			if (
-				Array.from(Object.values(x.name)).some(
+				Object.values(x.name).some(
 					(y) =>
 						typeof y === 'string' &&
 						y.toLowerCase() === inputValue.toLowerCase()

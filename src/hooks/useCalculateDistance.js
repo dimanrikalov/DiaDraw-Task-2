@@ -1,9 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
 import { useFetchData } from './useFetchData';
-
-const toRadians = (degrees) => {
-	return degrees * (Math.PI / 180);
-};
+import { useState, useCallback } from 'react';
 
 export const useCalculateDistance = (initData) => {
 	const { data } = useFetchData(null);

@@ -33,11 +33,16 @@ export const useCalculateDistance = (initData) => {
 			const dLat = toRadians(lat2 - lat1);
 			const dLng = toRadians(lng2 - lng1);
 
+			//Haversine formula (calculating distance between 2 points on a sphere)
+
+			//square of half the chord length between two points on a sphere
 			const a =
 				Math.sin(dLat / 2) ** 2 +
 				Math.cos(toRadians(lat1)) *
 					Math.cos(toRadians(lat2)) *
 					Math.sin(dLng / 2) ** 2;
+
+			//angular distance between two points on a sphere
 			const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 			const distance = earthRadius * c;
 			setResult(distance.toFixed(2));
